@@ -37,7 +37,11 @@ app.add_middleware(
 )
 
 # Redis setup for rate limiting
-redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
+try:
+    redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
+except Exception as e:
+    print("Redis connection failed:", e)
+    redis_client = None
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
@@ -45,14 +49,17 @@ async def rate_limit_middleware(request: Request, call_next):
     
     # Simple Rate limit: 100 req / minute / user (Using IP or Auth header as fallback)
     identifier = request.headers.get("Authorization") or request.client.host
-    if identifier:
-        key = f"rate_limit:{identifier}"
-        requests = await redis_client.incr(key)
-        if requests == 1:
-            await redis_client.expire(key, 60)
-        
-        if requests > 100:
-            return Response("Rate limit exceeded", status_code=429)
+    if identifier and redis_client:
+        try:
+            key = f"rate_limit:{identifier}"
+            requests = await redis_client.incr(key)
+            if requests == 1:
+                await redis_client.expire(key, 60)
+            
+            if requests > 100:
+                return Response("Rate limit exceeded", status_code=429)
+        except Exception as e:
+            logger.warning(f"Redis rate limit error: {e}")
 
     try:
         response = await call_next(request)
