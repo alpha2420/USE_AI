@@ -7,14 +7,16 @@ from app.config import settings
 from app.database import AsyncSessionLocal, engine
 from sqlalchemy import text
 from app.services.llm_provider import generate_embedding
+import os
 import redis.asyncio as redis
 
 # Logging Setup
+os.makedirs("logs", exist_ok=True)
+
 logging.basicConfig(
-    filename='logs/app.log',
-    filemode='a',
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    filename="logs/app.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("useai")
 
