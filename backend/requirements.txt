@@ -14,5 +14,4 @@ requests
 pypdf
 httpx
 pgvector
-redis.asyncio
 redis
