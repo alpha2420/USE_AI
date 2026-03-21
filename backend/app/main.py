@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request, Response, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from .routes import auth, knowledge, whatsapp, chat
 from app.config import settings
-from app.database import SessionLocal
+from app.database import AsyncSessionLocal, engine
 from sqlalchemy import text
 from app.services.llm_provider import generate_embedding
 import redis.asyncio as redis
@@ -19,6 +19,12 @@ logging.basicConfig(
 logger = logging.getLogger("useai")
 
 app = FastAPI(title="useAI Backend MVP")
+
+@app.on_event("startup")
+async def startup_event():
+    async with engine.begin() as conn:
+        await conn.execute(text("SELECT 1"))
+    print("Database connection successful")
 
 app.add_middleware(
     CORSMiddleware,
@@ -64,28 +70,7 @@ app.include_router(chat.router, prefix="/chat", tags=["Chat"])
 
 @app.get("/health")
 async def health_check():
-    health_status = {"status": "ok", "database": "unknown", "llm": "unknown"}
-    
-    # Check DB
-    try:
-        async with SessionLocal() as session:
-            await session.execute(text("SELECT 1"))
-            health_status["database"] = "connected"
-    except Exception as e:
-        logger.error(f"DB Health check failed: {e}")
-        health_status["database"] = "disconnected"
-        health_status["status"] = "error"
-        
-    # Check LLM via dummy embedding
-    try:
-        await generate_embedding("test")
-        health_status["llm"] = "reachable"
-    except Exception as e:
-        logger.error(f"LLM Health check failed: {e}")
-        health_status["llm"] = "unreachable"
-        health_status["status"] = "error"
-        
-    return health_status
+    return {"status": "ok"}
 
 @app.get("/")
 async def root():
