@@ -13,3 +13,4 @@ httpx
 pgvector
 redis
 email-validator
+python-jose[cryptography]
