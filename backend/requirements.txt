@@ -1,14 +1,12 @@
-fastapi[standard]
+fastapi
+uvicorn
 pydantic
 pydantic-settings
 sqlalchemy
 asyncpg
 psycopg2-binary
 alembic
-passlib[bcrypt]
-python-jose[cryptography]
 python-dotenv
-openai
 beautifulsoup4
 requests
 pypdf
