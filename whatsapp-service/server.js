@@ -10,7 +10,7 @@ const fs = require('fs');
 const app = express();
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3002;
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
 
 // In-memory store for WhatsApp socket instances
