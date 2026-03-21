@@ -12,3 +12,4 @@ pypdf
 httpx
 pgvector
 redis
+email-validator
