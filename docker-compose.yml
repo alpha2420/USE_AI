@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  database:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: useai
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@database:5432/useai
+      - REDIS_URL=redis://redis:6379
+      - WHATSAPP_SERVICE_URL=http://whatsapp-service:3000
+      - LLM_PROVIDER=grok
+      - GROK_API_KEY=${GROK_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+      - redis
+
+  whatsapp-service:
+    build:
+      context: ./whatsapp-service
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://backend:8000
+      - PORT=3000
+
+volumes:
+  pgdata:

@@ -1,0 +1,210 @@
+
+> useai@0.1.0 lint
+> eslint
+
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/(auth)/login/page.tsx
+   51:29  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   56:23  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  197:28  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/(auth)/signup/page.tsx
+   98:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  109:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/campaigns/page.tsx
+    8:8    warning  'api' is defined but never used                                  @typescript-eslint/no-unused-vars
+   21:32   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   22:22   warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+   38:61   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   42:45   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   44:61   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   61:59   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   89:21   error    'valid' is never reassigned. Use 'const' instead                 prefer-const
+   89:28   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   92:44   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  139:18   warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  181:34   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  181:50   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  198:51   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  279:121  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/conversations/page.tsx
+    4:20  warning  'useMutation' is defined but never used   @typescript-eslint/no-unused-vars
+   16:52  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   43:32  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   44:22  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+   56:56  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   66:39  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   67:42  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   68:39  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:32  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   81:22  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  114:68  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:30  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  117:18  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  120:68  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  121:30  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  131:68  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  132:30  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  134:18  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  136:68  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:30  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  156:74  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  159:18  warning  'e' is defined but never used             @typescript-eslint/no-unused-vars
+  210:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  280:57  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/knowledge/page.tsx
+    4:20  warning  'useMutation' is defined but never used                          @typescript-eslint/no-unused-vars
+   53:18  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  113:18  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  138:18  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  154:32  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  155:22  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  172:69  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  173:40  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  175:22  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  190:32  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  191:22  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  225:67  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  226:37  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  234:18  warning  'e' is defined but never used                                    @typescript-eslint/no-unused-vars
+  254:26  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  386:60  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  423:47  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  433:66  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  433:79  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/layout.tsx
+  34:13  error    Error: Cannot access variable before it is declared
+
+`fetchLiveMetrics` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/layout.tsx:34:13
+  32 |         } else {
+  33 |             setIsChecking(false);
+> 34 |             fetchLiveMetrics();
+     |             ^^^^^^^^^^^^^^^^ `fetchLiveMetrics` accessed before it is declared
+  35 |         }
+  36 |     }, [router]);
+  37 |
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/layout.tsx:39:5
+  37 |
+  38 |     // Telemetry Setup
+> 39 |     const fetchLiveMetrics = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 40 |         try {
+     | ^^^^^^^^^^^^^
+> 41 |             const [statsRes, waRes] = await Promise.all([
+     …
+     | ^^^^^^^^^^^^^
+> 56 |         }
+     | ^^^^^^^^^^^^^
+> 57 |     };
+     | ^^^^^^^ `fetchLiveMetrics` is declared here
+  58 |
+  59 |     const handleLogout = () => {
+  60 |         authAPI.logout(); // Removes localStorage  react-hooks/immutability
+  46:37  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  52:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  52:66  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-explicit-any
+  54:18  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/page.tsx
+   14:13  error    'start' is never reassigned. Use 'const' instead                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       prefer-const
+   18:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/page.tsx:18:13
+  16 |         const end = value;
+  17 |         if (start === end) {
+> 18 |             setCount(end);
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  19 |             return;
+  20 |         }
+  21 |         let startTime: number | null = null;                                                                                         react-hooks/set-state-in-effect
+   51:24  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/dashboard/page.tsx:51:24
+  49 |     useEffect(() => {
+  50 |         const hour = new Date().getHours();
+> 51 |         if (hour < 12) setGreeting('Good morning');
+     |                        ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  52 |         else if (hour < 18) setGreeting('Good afternoon');
+  53 |         else setGreeting('Good evening');
+  54 |     }, []);  react-hooks/set-state-in-effect
+   62:32  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+   63:22  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   77:32  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+   78:22  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+   91:32  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+   92:22  warning  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  104:38  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  126:36  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+  149:28  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react/no-unescaped-entities
+  277:57  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-explicit-any
+
+/Users/shikharsingh/Desktop/aiiii/useai/app/onboarding/page.tsx
+    6:10  warning  'authAPI' is defined but never used                                                                                       @typescript-eslint/no-unused-vars
+    6:19  warning  'knowledgeAPI' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+    6:33  warning  'whatsappAPI' is defined but never used                                                                                   @typescript-eslint/no-unused-vars
+    6:46  warning  'dashboardAPI' is defined but never used                                                                                  @typescript-eslint/no-unused-vars
+   47:8   warning  React Hook useEffect has a missing dependency: 'stepData.businessName'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   58:21  error    Unexpected any. Specify a different type                                                                                  @typescript-eslint/no-explicit-any
+   77:18  warning  'err' is defined but never used                                                                                           @typescript-eslint/no-unused-vars
+  114:22  warning  'e' is defined but never used                                                                                             @typescript-eslint/no-unused-vars
+  146:18  warning  'err' is defined but never used                                                                                           @typescript-eslint/no-unused-vars
+  182:18  warning  'err' is defined but never used                                                                                           @typescript-eslint/no-unused-vars
+  216:18  warning  'err' is defined but never used                                                                                           @typescript-eslint/no-unused-vars
+  252:18  warning  'err' is defined but never used                                                                                           @typescript-eslint/no-unused-vars
+
+/Users/shikharsingh/Desktop/aiiii/useai/components/landing/Features.tsx
+   7:89  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  61:90  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/components/landing/Footer.tsx
+  11:112  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/components/landing/HowItWorks.tsx
+  38:106  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/components/landing/Pricing.tsx
+  103:132  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/components/landing/Testimonials.tsx
+  13:45   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  13:197  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  25:45   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  25:200  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  37:45   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  37:187  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  49:45   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  49:176  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  61:45   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  61:179  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  73:45   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  73:162  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+/Users/shikharsingh/Desktop/aiiii/useai/lib/api.ts
+  36:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  66:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  84:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  90:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 115 problems (83 errors, 32 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
