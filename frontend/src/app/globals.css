@@ -5,9 +5,7 @@
   -webkit-font-smoothing: antialiased
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --or: #FF4500;
