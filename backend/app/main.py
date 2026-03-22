@@ -33,11 +33,12 @@ async def startup_event():
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://use-ai-one.vercel.app",
         "http://localhost:3000",
     ],
     allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 print("CORS CONFIG: allow_origin_regex=https://.*.vercel.app")
