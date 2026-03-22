@@ -22,19 +22,7 @@ logging.basicConfig(
 logger = logging.getLogger("useai")
 
 app = FastAPI(title="useAI Backend MVP")
-@app.middleware("http")
-@app.middleware("http")
-async def hard_cors_debug(request, call_next):
-    response = await call_next(request)
 
-    # Force headers so we can prove the running app
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "*"
-    response.headers["Access-Control-Allow-Headers"] = "*"
-
-    print("DEBUG: hard CORS middleware executed")
-
-    return response
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
