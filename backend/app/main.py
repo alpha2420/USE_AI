@@ -51,6 +51,10 @@ except Exception as e:
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
+    # Skip preflight OPTIONS requests — let CORSMiddleware handle them
+    if request.method == "OPTIONS":
+        return await call_next(request)
+
     start_time = time.time()
     
     # Simple Rate limit: 100 req / minute / user (Using IP or Auth header as fallback)
