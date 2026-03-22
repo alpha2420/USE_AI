@@ -49,7 +49,7 @@ export default function ConversationsPage() {
           
           {conversations?.length === 0 && (
             <div className="p-8 text-center text-sm text-gray-400">
-              No active conversations yet
+              No conversations yet
             </div>
           )}
 

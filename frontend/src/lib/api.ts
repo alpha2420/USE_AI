@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const api = axios.create({
   baseURL: '/api/proxy',
+  withCredentials: true,
 });
 
 export const setApiToken = (token: string | null) => {

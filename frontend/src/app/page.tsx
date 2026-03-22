@@ -195,7 +195,7 @@ export default function LandingPage() {
       </div>
 
       {/* wa float */}
-      <Link href="/dashboard" className="wa-float" style={{textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>💬</Link>
+      <Link href="/signup" className="wa-float" style={{textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>💬</Link>
 
       {/* ══ NAV ════════════════════════════════════════════ */}
       <nav>

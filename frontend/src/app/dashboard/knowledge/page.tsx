@@ -171,6 +171,11 @@ export default function KnowledgePage() {
         </div>
 
       </div>
+
+      <div className="mt-12 text-center p-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+        <h3 className="text-lg font-bold text-gray-900 mb-2">Upload your first document</h3>
+        <p className="text-gray-500">Your AI agent has no custom knowledge configured yet.</p>
+      </div>
     </div>
   );
 }
