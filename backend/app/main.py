@@ -10,6 +10,7 @@ from app.services.llm_provider import generate_embedding
 import os
 import redis.asyncio as redis
 
+
 # Logging Setup
 os.makedirs("logs", exist_ok=True)
 
@@ -28,20 +29,18 @@ async def startup_event():
         await conn.execute(text("SELECT 1"))
     print("Database connection successful")
 
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://use-ai-one.vercel.app",
-        "http://localhost:3000"
+        "http://localhost:3000",
     ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-print("CORS ORIGINS:", [
-    "https://use-ai-one.vercel.app",
-    "http://localhost:3000"
-])
+print("CORS CONFIG: allow_origin_regex=https://.*.vercel.app")
 
 # Redis setup for rate limiting
 try:
