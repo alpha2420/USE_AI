@@ -37,11 +37,10 @@ app.add_middleware(
         "http://localhost:3000",
     ],
     allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_credentials=False,
+    allow_methods=["*"],
     allow_headers=["*"],
 )
-print("CORS CONFIG: allow_origin_regex=https://.*.vercel.app")
 
 # Redis setup for rate limiting
 try:
