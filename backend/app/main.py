@@ -22,7 +22,13 @@ logging.basicConfig(
 logger = logging.getLogger("useai")
 
 app = FastAPI(title="useAI Backend MVP")
-
+@app.middleware("http")
+async def force_cors_debug(request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "*"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
 @app.on_event("startup")
 async def startup_event():
     async with engine.begin() as conn:
