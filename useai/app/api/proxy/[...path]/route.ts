@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL =
   process.env.BACKEND_URL ||
-  "https://useai-backend-production.up.railway.app";
+  "https://useai-production.up.railway.app";
 
 async function proxyRequest(req: NextRequest) {
   // Extract the path after /api/proxy/
