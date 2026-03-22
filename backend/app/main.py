@@ -38,6 +38,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+print("CORS ORIGINS:", [
+    "https://use-ai-one.vercel.app",
+    "http://localhost:3000"
+])
 
 # Redis setup for rate limiting
 try:
