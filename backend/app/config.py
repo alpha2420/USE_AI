@@ -17,12 +17,23 @@ class Settings(BaseSettings):
     SECRET_KEY: str = os.getenv("SECRET_KEY", "supersecretkey")
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
+    # LLM Provider config
+    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "groq")
+    
+    # Groq (new default)
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
+    GROQ_BASE_URL: str = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
+    CHAT_MODEL: str = os.getenv("CHAT_MODEL", "llama-3.1-8b-instant")
+    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+
+    # Legacy keys (kept for backward compatibility)
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     GROK_API_KEY: str = os.getenv("GROK_API_KEY", "")
     GROK_BASE_URL: str = os.getenv("GROK_BASE_URL", "https://api.x.ai/v1")
+
     WHATSAPP_SERVICE_URL: str = os.getenv("WHATSAPP_SERVICE_URL", "http://localhost:3000")
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
-    LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "grok")
     SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
     SUPABASE_SERVICE_ROLE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 

@@ -30,8 +30,7 @@ async def startup_event():
     required_vars = [
         "DATABASE_URL", 
         "REDIS_URL", 
-        "OPENAI_API_KEY", 
-        "GROK_API_KEY", # Since it's the default provider
+        "GROQ_API_KEY",
         "SUPABASE_URL", 
         "SUPABASE_SERVICE_ROLE_KEY"
     ]
@@ -51,6 +50,27 @@ async def startup_event():
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
             await conn.run_sync(Base.metadata.create_all)
+
+            # Safe migration: alter embedding column from 1536 to 384 dims if needed
+            try:
+                result = await conn.execute(text(
+                    "SELECT atttypmod FROM pg_attribute "
+                    "WHERE attrelid = 'knowledge_chunks'::regclass "
+                    "AND attname = 'embedding'"
+                ))
+                row = result.first()
+                if row and row[0] != 384:
+                    print(f"⚙️ Migrating embedding column from {row[0]} to 384 dimensions...")
+                    await conn.execute(text(
+                        "DELETE FROM knowledge_chunks"
+                    ))
+                    await conn.execute(text(
+                        "ALTER TABLE knowledge_chunks ALTER COLUMN embedding TYPE vector(384)"
+                    ))
+                    print("✅ Embedding column migrated to 384 dimensions")
+            except Exception as vec_err:
+                print(f"⚠️ Vector migration check skipped: {vec_err}")
+
         print("✅ Database schema initialized successfully.")
         print("✅ Database connection successful")
     except Exception as e:
@@ -69,10 +89,15 @@ async def startup_event():
 
     # LLM provider diagnostics
     print(f"🤖 LLM provider: {settings.LLM_PROVIDER}")
-    print(f"🤖 Has Grok key: {bool(settings.GROK_API_KEY)}")
-    print(f"🤖 Grok base URL: {settings.GROK_BASE_URL}")
-    if settings.GROK_API_KEY:
-        print(f"🤖 Grok key length: {len(settings.GROK_API_KEY)}")
+    print(f"🤖 Chat model: {settings.CHAT_MODEL}")
+    print(f"🤖 Embedding model: {settings.EMBEDDING_MODEL}")
+    if settings.LLM_PROVIDER.lower() == "groq":
+        print(f"🤖 Has Groq key: {bool(settings.GROQ_API_KEY)}")
+        print(f"🤖 Groq base URL: {settings.GROQ_BASE_URL}")
+        if settings.GROQ_API_KEY:
+            print(f"🤖 Groq key length: {len(settings.GROQ_API_KEY)}")
+    elif settings.LLM_PROVIDER.lower() == "grok":
+        print(f"🤖 Has Grok key: {bool(settings.GROK_API_KEY)}")
 
 app.add_middleware(
     CORSMiddleware,
@@ -179,11 +204,21 @@ async def dependency_health():
 
 @app.get("/health/llm")
 async def llm_health():
+    provider = settings.LLM_PROVIDER.lower()
+    has_key = False
+    base_url = ""
+    if provider == "groq":
+        has_key = bool(settings.GROQ_API_KEY)
+        base_url = settings.GROQ_BASE_URL
+    elif provider == "grok":
+        has_key = bool(settings.GROK_API_KEY)
+        base_url = settings.GROK_BASE_URL
     return {
         "provider": settings.LLM_PROVIDER,
-        "has_key": bool(settings.GROK_API_KEY),
-        "key_length": len(settings.GROK_API_KEY) if settings.GROK_API_KEY else 0,
-        "base_url": settings.GROK_BASE_URL,
+        "has_key": has_key,
+        "base_url": base_url,
+        "chat_model": settings.CHAT_MODEL,
+        "embedding_model": settings.EMBEDDING_MODEL,
     }
 
 @app.get("/")
