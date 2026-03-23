@@ -1,5 +1,8 @@
 from app.config import settings
 import openai
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Initialize OpenAI client early if needed
 openai_client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY) if getattr(settings, "OPENAI_API_KEY", None) else None
@@ -24,8 +27,10 @@ async def generate_completion(messages: list[dict], model: str = None) -> str:
     provider = settings.LLM_PROVIDER.lower()
     
     if provider == "grok":
-        from app.services.grok_service import generate_grok_completion
-        return await generate_grok_completion(messages, model=model or "grok-beta")
+        from app.services.grok_service import generate_grok_completion, GROK_CHAT_MODEL
+        final_model = model or GROK_CHAT_MODEL
+        logger.info(f"Routing to Grok completion with model={final_model}")
+        return await generate_grok_completion(messages, model=final_model)
     else:
         if not openai_client:
             raise ValueError("OpenAI API key missing")

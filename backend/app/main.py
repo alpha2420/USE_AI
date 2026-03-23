@@ -67,6 +67,13 @@ async def startup_event():
     else:
         print("❌ Redis client not initialized")
 
+    # LLM provider diagnostics
+    print(f"🤖 LLM provider: {settings.LLM_PROVIDER}")
+    print(f"🤖 Has Grok key: {bool(settings.GROK_API_KEY)}")
+    print(f"🤖 Grok base URL: {settings.GROK_BASE_URL}")
+    if settings.GROK_API_KEY:
+        print(f"🤖 Grok key length: {len(settings.GROK_API_KEY)}")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -169,6 +176,15 @@ async def dependency_health():
         pass
         
     return status
+
+@app.get("/health/llm")
+async def llm_health():
+    return {
+        "provider": settings.LLM_PROVIDER,
+        "has_key": bool(settings.GROK_API_KEY),
+        "key_length": len(settings.GROK_API_KEY) if settings.GROK_API_KEY else 0,
+        "base_url": settings.GROK_BASE_URL,
+    }
 
 @app.get("/")
 async def root():
