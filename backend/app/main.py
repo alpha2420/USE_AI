@@ -132,7 +132,7 @@ async def health_check():
     return {"status": "ok"}
 
 @app.get("/health/dependencies")
-async def dependency_health(db: AsyncSessionLocal = Depends(AsyncSessionLocal)):
+async def dependency_health():
     import httpx
     status = {"database": "error", "redis": "error", "whatsapp": "error"}
     
