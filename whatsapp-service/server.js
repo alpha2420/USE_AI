@@ -102,8 +102,13 @@ app.post('/connect', async (req, res) => {
 // GET /status/:org_id
 app.get('/status/:org_id', (req, res) => {
     const orgId = req.params.org_id;
-    if (sessions.has(orgId)) {
-        res.json({ status: 'connected' });
+    const session = sessions.get(orgId);
+    if (session) {
+        if (session.sock?.user) {
+            res.json({ status: 'connected' });
+        } else {
+            res.json({ status: 'connecting' });
+        }
     } else {
         res.json({ status: 'disconnected' });
     }

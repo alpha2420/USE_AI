@@ -91,12 +91,25 @@ async def chat_webhook(request: Request, db: AsyncSession = Depends(get_db)):
         return {"status": "error", "message": str(e)}
 
 @router.get("/conversations")
-async def get_conversations(db: AsyncSession = Depends(get_db)):
-    # Helper to retrieve conversations, ideally authenticated
-    result = await db.execute(select(Conversation).limit(100))
+async def get_conversations(db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Retrieve all conversations for the current User's organization.
+    """
+    stmt = select(Conversation).where(Conversation.org_id == current_user.org_id).order_by(Conversation.id.desc()).limit(100)
+    result = await db.execute(stmt)
     return result.scalars().all()
 
 @router.get("/conversations/{conv_id}/messages")
-async def get_messages(conv_id: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Message).where(Message.conversation_id == conv_id).order_by(Message.timestamp))
+async def get_messages(conv_id: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Retrieve all messages for a specific conversation, ensuring it belongs to the user's organization.
+    """
+    # Verify ownership
+    conv_stmt = select(Conversation).where(Conversation.id == conv_id, Conversation.org_id == current_user.org_id)
+    conv_result = await db.execute(conv_stmt)
+    if not conv_result.scalars().first():
+        raise HTTPException(status_code=403, detail="Unauthorized access to conversation")
+
+    msg_stmt = select(Message).where(Message.conversation_id == conv_id).order_by(Message.timestamp)
+    result = await db.execute(msg_stmt)
     return result.scalars().all()

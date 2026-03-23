@@ -24,11 +24,12 @@ export default function TestChat() {
 
   const chatMutation = useMutation({
     mutationFn: (newQuestion: string) => api.post('/chat/test', { question: newQuestion }),
-    onSuccess: (data, newQuestion) => {
+    onSuccess: (data: any) => {
       setHistory((prev) => [
         ...prev,
         { role: 'ai', text: data.data.reply },
       ]);
+      toast.success('Reply received');
     },
     onError: (err: any) => toast.error(err.response?.data?.detail || 'Failed to send message'),
   });

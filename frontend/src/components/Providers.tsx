@@ -6,19 +6,25 @@ import { useAuth } from '@clerk/nextjs';
 import { setApiToken } from '@/lib/api';
 
 function ApiInterceptor({ children }: { children: React.ReactNode }) {
-  const { getToken } = useAuth();
+  const { getToken, isLoaded } = useAuth();
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     const attachToken = async () => {
+      if (!isLoaded) return;
       try {
         const token = await getToken();
         setApiToken(token);
       } catch (err) {
         setApiToken(null);
+      } finally {
+        setInitialized(true);
       }
     };
     attachToken();
-  }, [getToken]);
+  }, [getToken, isLoaded]);
+
+  if (!initialized) return null;
 
   return <>{children}</>;
 }

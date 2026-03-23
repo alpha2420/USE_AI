@@ -62,7 +62,7 @@ export default function KnowledgePage() {
         {/* Card 1: URL */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
           <div className="p-6 border-b border-gray-100 flex items-center gap-3">
-            <div className="p-2bg-blue-50 text-blue-600 rounded-lg">
+            <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
               <Link2 className="w-5 h-5 text-blue-500" />
             </div>
             <h3 className="font-semibold text-gray-800 text-lg">Upload URL</h3>
@@ -93,7 +93,7 @@ export default function KnowledgePage() {
         {/* Card 2: PDF */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
           <div className="p-6 border-b border-gray-100 flex items-center gap-3">
-            <div className="p-2bg-red-50 text-red-600 rounded-lg">
+            <div className="p-2 bg-red-50 text-red-600 rounded-lg">
               <FileText className="w-5 h-5 text-red-500" />
             </div>
             <h3 className="font-semibold text-gray-800 text-lg">Upload PDF</h3>
@@ -139,7 +139,7 @@ export default function KnowledgePage() {
         {/* Card 3: Manual Text */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col hover:shadow-md transition-shadow">
           <div className="p-6 border-b border-gray-100 flex items-center gap-3">
-            <div className="p-2bg-purple-50 text-purple-600 rounded-lg">
+            <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
               <AlignLeft className="w-5 h-5 text-purple-500" />
             </div>
             <h3 className="font-semibold text-gray-800 text-lg">Manual Text</h3>
