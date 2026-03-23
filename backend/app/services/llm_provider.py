@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 async def generate_embedding(text: str) -> list[float]:
-    """Generate an embedding using the local SentenceTransformer model."""
-    from app.services.embeddings import generate_embedding as _local_embedding
-    return await _local_embedding(text)
+    """Generate an embedding using the OpenAI embeddings API."""
+    from app.services.embeddings import generate_embedding as _api_embedding
+    return await _api_embedding(text)
 
 
 async def generate_completion(messages: list[dict], model: str = None) -> str:

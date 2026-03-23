@@ -17,4 +17,3 @@ python-jose[cryptography]
 passlib[bcrypt]
 openai
 python-multipart
-sentence-transformers

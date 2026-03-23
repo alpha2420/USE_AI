@@ -28,6 +28,6 @@ class KnowledgeChunk(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     org_id = Column(String, ForeignKey("organizations.id"), index=True)
     text = Column(String, nullable=False)
-    embedding = Column(Vector(384))
+    embedding = Column(Vector(1536))
     
     organization = relationship("Organization")

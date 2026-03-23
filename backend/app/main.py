@@ -31,6 +31,7 @@ async def startup_event():
         "DATABASE_URL", 
         "REDIS_URL", 
         "GROQ_API_KEY",
+        "OPENAI_API_KEY",
         "SUPABASE_URL", 
         "SUPABASE_SERVICE_ROLE_KEY"
     ]
@@ -51,7 +52,7 @@ async def startup_event():
             await conn.execute(text("SELECT 1"))
             await conn.run_sync(Base.metadata.create_all)
 
-            # Safe migration: alter embedding column from 1536 to 384 dims if needed
+            # Safe migration: ensure embedding column is 1536 dims
             try:
                 result = await conn.execute(text(
                     "SELECT atttypmod FROM pg_attribute "
@@ -59,15 +60,15 @@ async def startup_event():
                     "AND attname = 'embedding'"
                 ))
                 row = result.first()
-                if row and row[0] != 384:
-                    print(f"⚙️ Migrating embedding column from {row[0]} to 384 dimensions...")
+                if row and row[0] != 1536:
+                    print(f"⚙️ Migrating embedding column from {row[0]} to 1536 dimensions...")
                     await conn.execute(text(
                         "DELETE FROM knowledge_chunks"
                     ))
                     await conn.execute(text(
-                        "ALTER TABLE knowledge_chunks ALTER COLUMN embedding TYPE vector(384)"
+                        "ALTER TABLE knowledge_chunks ALTER COLUMN embedding TYPE vector(1536)"
                     ))
-                    print("✅ Embedding column migrated to 384 dimensions")
+                    print("✅ Embedding column migrated to 1536 dimensions")
             except Exception as vec_err:
                 print(f"⚠️ Vector migration check skipped: {vec_err}")
 
