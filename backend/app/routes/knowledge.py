@@ -25,7 +25,10 @@ async def extract_url(request: URLRequest, db: AsyncSession = Depends(get_db), c
         await process_text(text, current_user.org_id, db)
         return {"message": "URL content processed successfully"}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/pdf")
 async def extract_pdf(file: UploadFile = File(...), db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -45,7 +48,10 @@ async def extract_pdf(file: UploadFile = File(...), db: AsyncSession = Depends(g
         await process_text(text, current_user.org_id, db)
         return {"message": "PDF content processed successfully"}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/manual")
 async def extract_manual(request: ManualTextRequest, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -53,4 +59,7 @@ async def extract_manual(request: ManualTextRequest, db: AsyncSession = Depends(
         await process_text(request.text, current_user.org_id, db)
         return {"message": "Text processed successfully"}
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))

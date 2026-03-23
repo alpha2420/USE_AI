@@ -25,10 +25,42 @@ app = FastAPI(title="useAI Backend MVP")
 
 @app.on_event("startup")
 async def startup_event():
-    async with engine.begin() as conn:
-        await conn.execute(text("SELECT 1"))
-    print("Database connection successful")
+    import traceback
+    # Step 4: Verify environment variables
+    required_vars = [
+        "DATABASE_URL", 
+        "REDIS_URL", 
+        "OPENAI_API_KEY", 
+        "GROK_API_KEY", # Since it's the default provider
+        "SUPABASE_URL", 
+        "SUPABASE_SERVICE_ROLE_KEY"
+    ]
+    
+    print("--- 🔬 Verifying Dependencies ---")
+    for var in required_vars:
+        val = getattr(settings, var, None)
+        if not val:
+            print(f"⚠️ WARNING: Missing environment variable: {var}")
+        else:
+            print(f"✅ Found: {var}")
 
+    try:
+        async with engine.begin() as conn:
+            await conn.execute(text("SELECT 1"))
+        print("✅ Database connection successful")
+    except Exception as e:
+        print("❌ Database connection FAILED:")
+        traceback.print_exc()
+
+    if redis_client:
+        try:
+            await redis_client.ping()
+            print("✅ Redis connection successful")
+        except Exception as e:
+            print("❌ Redis connection FAILED:")
+            traceback.print_exc()
+    else:
+        print("❌ Redis client not initialized")
 
 app.add_middleware(
     CORSMiddleware,
@@ -37,17 +69,20 @@ app.add_middleware(
         "http://localhost:3000",
     ],
     allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Redis setup for rate limiting
+redis_client = None
 try:
-    redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
+    if settings.REDIS_URL:
+        redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
 except Exception as e:
-    print("Redis connection failed:", e)
-    redis_client = None
+    import traceback
+    print("Redis initialization failed:")
+    traceback.print_exc()
 
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
@@ -74,8 +109,13 @@ async def rate_limit_middleware(request: Request, call_next):
     try:
         response = await call_next(request)
     except Exception as e:
+        import traceback
+        import sys
+        print("--- CRITICAL SERVER ERROR ---")
+        traceback.print_exc(file=sys.stdout)
         logger.error(f"Server Error: {str(e)}")
-        response = Response("Internal Server Error", status_code=500)
+        # More informative response for debugging (MVP stage only)
+        response = Response(f"Internal Server Error: {str(e)}", status_code=500)
         
     process_time = time.time() - start_time
     logger.info(f"{request.method} {request.url.path} - {response.status_code} - {process_time:.4f}s")
@@ -90,6 +130,40 @@ app.include_router(chat.router, prefix="/chat", tags=["Chat"])
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
+@app.get("/health/dependencies")
+async def dependency_health(db: AsyncSessionLocal = Depends(AsyncSessionLocal)):
+    import httpx
+    status = {"database": "error", "redis": "error", "whatsapp": "error"}
+    
+    # Check Database
+    try:
+        from sqlalchemy import text
+        async with engine.begin() as conn:
+            await conn.execute(text("SELECT 1"))
+        status["database"] = "ok"
+    except:
+        pass
+        
+    # Check Redis
+    if redis_client:
+        try:
+            await redis_client.ping()
+            status["redis"] = "ok"
+        except:
+            pass
+            
+    # Check Whatsapp service
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(f"{settings.WHATSAPP_SERVICE_URL.rstrip('/')}/status/health-test", timeout=2.0)
+            # Just checking if service responds
+            if resp.status_code < 500:
+                status["whatsapp"] = "ok"
+    except:
+        pass
+        
+    return status
 
 @app.get("/")
 async def root():

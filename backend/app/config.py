@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     WHATSAPP_SERVICE_URL: str = os.getenv("WHATSAPP_SERVICE_URL", "http://localhost:3000")
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379")
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "grok")
+    SUPABASE_URL: str = os.getenv("SUPABASE_URL", "")
+    SUPABASE_SERVICE_ROLE_KEY: str = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
     class Config:
         env_file = ".env"

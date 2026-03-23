@@ -15,6 +15,23 @@ router = APIRouter()
 class TestChatRequest(BaseModel):
     question: str
 
+class ChatRequest(BaseModel):
+    message: str
+
+@router.post("/")
+async def chat_completion(request: ChatRequest, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
+    """
+    Direct chat endpoint for AI response.
+    """
+    try:
+        reply_content = await generate_reply(request.message, current_user.org_id, db)
+        return {"status": "success", "reply": reply_content}
+    except Exception as e:
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/test")
 async def test_chat(request: TestChatRequest, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """
@@ -24,6 +41,9 @@ async def test_chat(request: TestChatRequest, db: AsyncSession = Depends(get_db)
         reply_content = await generate_reply(request.question, current_user.org_id, db)
         return {"status": "success", "reply": reply_content}
     except Exception as e:
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/webhook")
@@ -32,44 +52,44 @@ async def chat_webhook(request: Request, db: AsyncSession = Depends(get_db)):
     Webhook endpoint to receive incoming messages from the Baileys Node.js service.
     Expected JSON payload: {"org_id": "...", "customer_phone": "...", "content": "..."}
     """
-    body = await request.json()
-    org_id = body.get("org_id")
-    customer_phone = body.get("customer_phone")
-    content = body.get("content")
-    
-    if not all([org_id, customer_phone, content]):
-        raise HTTPException(status_code=400, detail="Missing required fields")
-    
-    # Verify organization exists
-    org_result = await db.execute(select(Organization).where(Organization.id == org_id))
-    org = org_result.scalars().first()
-    if not org:
-        raise HTTPException(status_code=404, detail="Organization not found")
-        
-    # Find or create conversation
-    conv_result = await db.execute(select(Conversation).where(
-        Conversation.org_id == org_id,
-        Conversation.customer_phone == customer_phone,
-        Conversation.status == "active"
-    ))
-    conversation = conv_result.scalars().first()
-    
-    if not conversation:
-        conversation = Conversation(org_id=org_id, customer_phone=customer_phone, status="active")
-        db.add(conversation)
-        await db.commit()
-        await db.refresh(conversation)
-        
-    # Save incoming message
-    inbound_msg = Message(
-        conversation_id=conversation.id,
-        content=content,
-        direction="inbound"
-    )
-    db.add(inbound_msg)
-    await db.commit()
-    
     try:
+        body = await request.json()
+        org_id = body.get("org_id")
+        customer_phone = body.get("customer_phone")
+        content = body.get("content")
+        
+        if not all([org_id, customer_phone, content]):
+            raise HTTPException(status_code=400, detail="Missing required fields")
+        
+        # Verify organization exists
+        org_result = await db.execute(select(Organization).where(Organization.id == org_id))
+        org = org_result.scalars().first()
+        if not org:
+            raise HTTPException(status_code=404, detail="Organization not found")
+            
+        # Find or create conversation
+        conv_result = await db.execute(select(Conversation).where(
+            Conversation.org_id == org_id,
+            Conversation.customer_phone == customer_phone,
+            Conversation.status == "active"
+        ))
+        conversation = conv_result.scalars().first()
+        
+        if not conversation:
+            conversation = Conversation(org_id=org_id, customer_phone=customer_phone, status="active")
+            db.add(conversation)
+            await db.commit()
+            await db.refresh(conversation)
+            
+        # Save incoming message
+        inbound_msg = Message(
+            conversation_id=conversation.id,
+            content=content,
+            direction="inbound"
+        )
+        db.add(inbound_msg)
+        await db.commit()
+        
         # Call RAG to generate reply
         reply_content = await generate_reply(content, org_id, db)
         
@@ -87,7 +107,9 @@ async def chat_webhook(request: Request, db: AsyncSession = Depends(get_db)):
         
         return {"status": "success", "reply": reply_content}
     except Exception as e:
-        print(f"Error handling webhook: {e}")
+        import traceback
+        print("ERROR Webhook:", str(e))
+        traceback.print_exc()
         return {"status": "error", "message": str(e)}
 
 @router.get("/conversations")
@@ -95,21 +117,33 @@ async def get_conversations(db: AsyncSession = Depends(get_db), current_user: Us
     """
     Retrieve all conversations for the current User's organization.
     """
-    stmt = select(Conversation).where(Conversation.org_id == current_user.org_id).order_by(Conversation.id.desc()).limit(100)
-    result = await db.execute(stmt)
-    return result.scalars().all()
+    try:
+        stmt = select(Conversation).where(Conversation.org_id == current_user.org_id).order_by(Conversation.id.desc()).limit(100)
+        result = await db.execute(stmt)
+        return result.scalars().all()
+    except Exception as e:
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/conversations/{conv_id}/messages")
 async def get_messages(conv_id: str, db: AsyncSession = Depends(get_db), current_user: User = Depends(get_current_user)):
     """
     Retrieve all messages for a specific conversation, ensuring it belongs to the user's organization.
     """
-    # Verify ownership
-    conv_stmt = select(Conversation).where(Conversation.id == conv_id, Conversation.org_id == current_user.org_id)
-    conv_result = await db.execute(conv_stmt)
-    if not conv_result.scalars().first():
-        raise HTTPException(status_code=403, detail="Unauthorized access to conversation")
+    try:
+        # Verify ownership
+        conv_stmt = select(Conversation).where(Conversation.id == conv_id, Conversation.org_id == current_user.org_id)
+        conv_result = await db.execute(conv_stmt)
+        if not conv_result.scalars().first():
+            raise HTTPException(status_code=403, detail="Unauthorized access to conversation")
 
-    msg_stmt = select(Message).where(Message.conversation_id == conv_id).order_by(Message.timestamp)
-    result = await db.execute(msg_stmt)
-    return result.scalars().all()
+        msg_stmt = select(Message).where(Message.conversation_id == conv_id).order_by(Message.timestamp)
+        result = await db.execute(msg_stmt)
+        return result.scalars().all()
+    except Exception as e:
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))

@@ -17,6 +17,9 @@ async def request_whatsapp_connection(db: AsyncSession = Depends(get_db), curren
         response = await connect_whatsapp(current_user.org_id)
         return {"message": "WhatsApp connection initiated", "qr": response.get("qr")}
     except Exception as e:
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/status")
@@ -28,4 +31,7 @@ async def check_whatsapp_status(db: AsyncSession = Depends(get_db), current_user
         response = await get_whatsapp_status(current_user.org_id)
         return {"status": response.get("status")}
     except Exception as e:
+        import traceback
+        print("ERROR:", str(e))
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
