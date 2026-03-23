@@ -28,7 +28,6 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
 
     # Legacy keys (kept for backward compatibility)
-    OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     GROK_API_KEY: str = os.getenv("GROK_API_KEY", "")
     GROK_BASE_URL: str = os.getenv("GROK_BASE_URL", "https://api.x.ai/v1")
 

@@ -31,7 +31,6 @@ async def startup_event():
         "DATABASE_URL", 
         "REDIS_URL", 
         "GROQ_API_KEY",
-        "OPENAI_API_KEY",
         "SUPABASE_URL", 
         "SUPABASE_SERVICE_ROLE_KEY"
     ]

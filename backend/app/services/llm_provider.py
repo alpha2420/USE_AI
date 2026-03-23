@@ -1,6 +1,6 @@
 """
 LLM Provider router — dispatches chat completions and embeddings
-to the configured provider (groq, grok, or openai).
+to the configured provider (groq or grok).
 """
 from app.config import settings
 import logging
@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 async def generate_embedding(text: str) -> list[float]:
-    """Generate an embedding using the OpenAI embeddings API."""
+    """Generate an embedding using the embeddings API."""
     from app.services.embeddings import generate_embedding as _api_embedding
     return await _api_embedding(text)
 
@@ -31,13 +31,4 @@ async def generate_completion(messages: list[dict], model: str = None) -> str:
         return await generate_grok_completion(messages, model=model)
 
     else:
-        # OpenAI fallback
-        import openai
-        openai_client = openai.AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
-        if not settings.OPENAI_API_KEY:
-            raise ValueError("OpenAI API key missing")
-        response = await openai_client.chat.completions.create(
-            model=model or "gpt-4o",
-            messages=messages
-        )
-        return response.choices[0].message.content
+        raise ValueError(f"Unknown LLM provider: {provider}")
