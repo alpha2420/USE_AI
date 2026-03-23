@@ -45,11 +45,16 @@ async def startup_event():
             print(f"✅ Found: {var}")
 
     try:
+        from app.database import Base, engine
+        import app.models.user
+        import app.models.conversation
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
+            await conn.run_sync(Base.metadata.create_all)
+        print("✅ Database schema initialized successfully.")
         print("✅ Database connection successful")
     except Exception as e:
-        print("❌ Database connection FAILED:")
+        print("❌ Database connection or schema initialization FAILED:")
         traceback.print_exc()
 
     if redis_client:
