@@ -58,8 +58,8 @@ export default function ConversationsPage() {
               key={conv.id}
               onClick={() => setSelectedConv(conv)}
               className={clsx(
-                "w-full text-left p-4 border-b border-gray-100 hover:bg-orange-50 transition-colors flex flex-col gap-1 focus:outline-none",
-                selectedConv?.id === conv.id ? "bg-orange-50 border-l-4 border-l-orange-500" : "bg-white border-l-4 border-transparent"
+                "w-full text-left p-4 border-b border-gray-100 hover:bg-teal-50/50 transition-colors flex flex-col gap-1 focus:outline-none",
+                selectedConv?.id === conv.id ? "bg-teal-50 border-l-4 border-l-teal-600" : "bg-white border-l-4 border-transparent"
               )}
             >
               <div className="flex justify-between items-center w-full">
@@ -85,7 +85,7 @@ export default function ConversationsPage() {
             {/* Chat Header */}
             <div className="p-4 border-b border-gray-200 bg-white shadow-sm z-10 sticky top-0 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold">
+                <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-bold border border-teal-200">
                   {selectedConv.customer_phone.substring(0, 2)}
                 </div>
                 <div>
@@ -109,11 +109,11 @@ export default function ConversationsPage() {
                       <div className={clsx(
                         "max-w-[75%] rounded-2xl px-5 py-3 shadow-sm",
                         isAi 
-                          ? "bg-orange-500 text-white rounded-br-sm" 
-                          : "bg-white border border-gray-200 text-gray-800 rounded-bl-sm"
+                          ? "bg-teal-600 text-white rounded-br-sm shadow-teal-600/10" 
+                          : "bg-white border border-gray-100 text-gray-800 rounded-bl-sm"
                       )}>
                         <p className="text-sm break-words whitespace-pre-wrap leading-relaxed">{msg.content}</p>
-                        <p className={clsx("text-[10px] mt-2 text-right", isAi ? "text-orange-200" : "text-gray-400")}>
+                        <p className={clsx("text-[10px] mt-2 text-right", isAi ? "text-teal-100" : "text-gray-400")}>
                           {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </p>
                       </div>
