@@ -198,7 +198,7 @@ export default function LandingPage() {
       <Link href="/signup" className="wa-float" style={{textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>💬</Link>
 
       {/* ══ NAV ════════════════════════════════════════════ */}
-      <nav>
+      <nav className="landing-nav">
         <div className="nav-logo">use<span>AI</span></div>
         <div className="nav-links">
           <Link href="#how">How it works</Link>

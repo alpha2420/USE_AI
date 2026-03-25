@@ -228,7 +228,7 @@ body {
 }
 
 /* ══ NAV ════════════════════════════════════════════════ */
-nav {
+.landing-nav {
   position: fixed;
   top: 16px;
   left: 50%;
