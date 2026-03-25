@@ -3,9 +3,27 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { useUser } from '@clerk/nextjs';
-import { RefreshCw, QrCode } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { RefreshCw, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import Link from 'next/link';
+
+const L = {
+  bg:          '#f4f8f6',
+  surface:     '#ffffff',
+  surface2:    '#f0f9f5',
+  surface3:    '#e8f5ef',
+  border:      '#e2ede9',
+  borderBright:'#c8ddd7',
+  textPrimary: '#0d1f18',
+  textSec:     '#4a7a6a',
+  textMuted:   '#9ab8af',
+  em:          '#00a87e',
+  emDim:       '#00a87e18',
+  emGlow:      '#00a87e35',
+  red:         '#e53e3e',
+  amber:       '#d97706',
+  blue:        '#2563eb',
+} as const;
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -13,126 +31,248 @@ export default function DashboardPage() {
 
   const whatsappMutation = useMutation({
     mutationFn: () => api.post('/whatsapp/connect'),
-    onSuccess: () => {
-      setShowQR(true);
-      toast.success('Connection request sent!');
-    },
-    onError: () => {
-      toast.error('Failed to request WhatsApp connection');
-    }
+    onSuccess: () => setShowQR(true),
   });
 
-  const { data: whatsappStatus, refetch } = useQuery({
+  const { data: whatsappStatus } = useQuery({
     queryKey: ['whatsappStatus'],
     queryFn: () => api.get('/whatsapp/status').then(res => res.data),
-    refetchInterval: 2000,
+    refetchInterval: 5000,
   });
 
   const status = whatsappStatus?.status || 'unknown';
 
-  useEffect(() => {
-    if (status === 'connected') {
-      setShowQR(false);
-    }
-  }, [status]);
+  const stats = [
+    { label: 'Conversations', value: '1,284', trend: '+12%',  sub: 'Total sessions handled',  icon: '💬', up: true  },
+    { label: 'AI Accuracy',   value: '98.2%',  trend: '+0.4%', sub: 'Response precision rate', icon: '🎯', up: true,  highlight: true },
+    { label: 'Avg Response',  value: '1.4s',   trend: '−200ms',sub: 'Average reply latency',   icon: '⏱', up: false },
+    { label: 'Hours Saved',   value: '42.5h',  trend: '+5.2h', sub: 'Team productivity gain',  icon: '⚡', up: true  },
+  ];
+
+  const quickActions = [
+    { name: 'View Transcripts', desc: 'Browse conversation history',     icon: '📄', href: '/dashboard/conversations', color: L.blue,  bg: '#2563eb12' },
+    { name: 'Test Sandbox',     desc: 'Try responses before going live', icon: '🧪', href: '/dashboard/test-chat',     color: L.amber, bg: '#d9770612' },
+    { name: 'System Settings',  desc: 'Configure your workspace',        icon: '⚙',  href: '/dashboard/settings',      color: L.em,    bg: L.emDim    },
+    { name: 'Knowledge Base',   desc: 'Manage AI training documents',    icon: '🗃',  href: '/dashboard/knowledge',     color: L.red,   bg: '#e53e3e12' },
+  ];
 
   return (
-    <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500 fade-in">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
-          <p className="text-gray-500">Overview of your useAI system connections.</p>
-        </div>
-        <div className="flex gap-2">
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Ready</span>
-          {/* <span className="px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">Training</span> */}
-        </div>
-      </div>
-      
-      {/* Onboarding Message */}
-      <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-xl p-6 border border-orange-200/50 shadow-sm">
-        <h3 className="font-bold text-orange-900 mb-4 text-lg">Getting Started</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-white/80 rounded-lg p-4 shadow-sm border border-orange-100">
-            <div className="text-orange-600 font-bold mb-1">Step 1</div>
-            <div className="text-gray-800 font-medium">Connect WhatsApp</div>
-            <div className="text-xs text-gray-500 mt-1">Scan the QR to link your agent.</div>
-          </div>
-          <div className="bg-white/80 rounded-lg p-4 shadow-sm border border-orange-100">
-            <div className="text-orange-600 font-bold mb-1">Step 2</div>
-            <div className="text-gray-800 font-medium">Upload knowledge</div>
-            <div className="text-xs text-gray-500 mt-1">Provide URLs or PDFs for AI training.</div>
-          </div>
-          <div className="bg-white/80 rounded-lg p-4 shadow-sm border border-orange-100">
-            <div className="text-orange-600 font-bold mb-1">Step 3</div>
-            <div className="text-gray-800 font-medium">Start chatting</div>
-            <div className="text-xs text-gray-500 mt-1">AI automatically replies to customers.</div>
-          </div>
-        </div>
+    <div style={{ color: L.textPrimary, fontFamily: "'DM Sans', sans-serif" }}>
+
+      {/* Greeting */}
+      <div className="mb-8 animate-in fade-in slide-in-from-bottom-3 duration-500">
+        <h1 className="text-[34px] font-extrabold leading-tight mb-1" style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-1px' }}>
+          Welcome back, <span style={{ color: L.em }}>{user?.firstName || 'Chief'}!</span>
+        </h1>
+        <p className="text-sm" style={{ color: L.textSec }}>Here's a quick overview of your useAI system status.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-        {/* WhatsApp Connection Card */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-            <h3 className="font-semibold text-gray-800 text-lg flex items-center gap-2">
-              <QrCode className="w-5 h-5 text-green-500" />
-              WhatsApp Node
-            </h3>
-            <button onClick={() => refetch()} className="text-gray-400 hover:text-gray-600 transition-colors">
-              <RefreshCw className={`w-5 h-5 ${whatsappMutation.isPending ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-          
-          <div className="p-6">
-            <div className="flex items-center justify-between mb-6">
-              <span className="text-sm text-gray-500 uppercase tracking-wide font-medium">Connection Status</span>
-              {status === 'connected' && <span className="px-3 py-1 text-sm rounded-full bg-green-100 text-green-800 font-semibold border border-green-200">Connected</span>}
-              {status === 'connecting' && <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800 font-semibold border border-yellow-200">Connecting...</span>}
-              {(status === 'disconnected' || status === 'unknown') && <span className="px-3 py-1 text-sm rounded-full bg-red-100 text-red-800 font-semibold border border-red-200">Disconnected</span>}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-100">
+        {stats.map((s, i) => (
+          <div key={i} className="rounded-2xl p-5 relative overflow-hidden cursor-default transition-all duration-200"
+            style={{
+              background: s.highlight ? 'linear-gradient(135deg, #ffffff 0%, #edfaf5 100%)' : L.surface,
+              border: `1px solid ${s.highlight ? L.emGlow : L.border}`,
+              boxShadow: s.highlight ? `0 0 0 1px ${L.emDim}` : '0 1px 3px rgba(0,0,0,0.04)',
+            }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 24px rgba(0,168,126,0.10)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = s.highlight ? `0 0 0 1px ${L.emDim}` : '0 1px 3px rgba(0,0,0,0.04)'; }}
+          >
+            {s.highlight && (
+              <div className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
+                style={{ background: `linear-gradient(90deg, transparent, ${L.em}, transparent)` }} />
+            )}
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.8px]" style={{ color: L.textMuted }}>
+                <span className="text-sm">{s.icon}</span>{s.label}
+              </div>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full"
+                style={{ color: s.up ? L.em : L.amber, background: s.up ? L.emDim : '#d9770612' }}>
+                {s.trend}
+              </span>
             </div>
+            <div className="text-[30px] font-bold leading-none mb-1" style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-1.5px', color: L.textPrimary }}>
+              {s.value}
+            </div>
+            <div className="text-[11px]" style={{ color: L.textMuted }}>{s.sub}</div>
+          </div>
+        ))}
+      </div>
 
-            {(status === 'disconnected' || status === 'unknown') && (
-              <button 
-                onClick={() => whatsappMutation.mutate()} 
-                disabled={whatsappMutation.isPending} 
-                className="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 active:bg-orange-800 text-white font-medium rounded-lg shadow-sm transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {whatsappMutation.isPending ? 'Requesting Connection...' : 'Connect WhatsApp'}
-              </button>
-            )}
-            
-            {status === 'connected' && (
-              <div className="p-4 bg-green-50 rounded-lg border border-green-100 mt-4">
-                <p className="text-green-800 text-sm">Your proxy node is actively listening. Incoming messages will be automatically routed to your AI agent.</p>
+      {/* WhatsApp Node */}
+      <div className="mb-5 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-200">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-sm">📡</span>
+          <span className="text-[13px] font-bold" style={{ fontFamily: "'Syne', sans-serif" }}>WhatsApp Node</span>
+        </div>
+
+        <div className="rounded-2xl p-7 relative overflow-hidden"
+          style={{ background: L.surface, border: `1px solid ${L.border}`, boxShadow: '0 1px 8px rgba(0,0,0,0.05)' }}>
+          <div className="pointer-events-none absolute top-0 right-0 w-48 h-48"
+            style={{ background: `radial-gradient(circle, ${L.emDim} 0%, transparent 70%)` }} />
+
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
+                style={{ background: L.emDim, border: `1px solid ${L.emGlow}` }}>⬡</div>
+              <div>
+                <div className="text-[17px] font-bold" style={{ fontFamily: "'Syne', sans-serif", letterSpacing: '-0.5px' }}>WhatsApp Node</div>
+                <div className="text-xs mt-0.5" style={{ color: L.textMuted }}>Powered by useAI Baileys Gateway</div>
               </div>
-            )}
-            {status === 'connecting' && (
-              <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-100 mt-4">
-                <p className="text-yellow-800 text-sm">Attempting to establish a stable websocket connection to WhatsApp...</p>
+            </div>
+            {status === 'connected' ? (
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold"
+                style={{ background: L.emDim, border: `1px solid ${L.emGlow}`, color: L.em }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: L.em }} /> ACTIVE
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold"
+                style={{ background: '#e53e3e0e', border: '1px solid #e53e3e25', color: L.red }}>
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse inline-block" style={{ background: L.red }} /> INACTIVE
               </div>
             )}
           </div>
+
+          <div className="mb-5">
+            <div className="flex justify-between text-xs font-medium mb-2" style={{ color: L.textMuted }}>
+              <span>System Readiness</span>
+              <span style={{ color: L.em, fontWeight: 700 }}>100% Loaded</span>
+            </div>
+            <div className="h-1.5 rounded-full overflow-hidden" style={{ background: L.surface3 }}>
+              <div className="h-full rounded-full w-full relative overflow-hidden"
+                style={{ background: `linear-gradient(90deg, ${L.em}, #00c896)` }}>
+                <div className="absolute inset-y-0 right-0 w-12"
+                  style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5))', animation: 'shimmer 2s ease-in-out infinite' }} />
+              </div>
+            </div>
+          </div>
+
+          {(status === 'disconnected' || status === 'unknown') && (
+            <div className="space-y-4">
+              <p className="text-[13.5px] leading-relaxed" style={{ color: L.textSec }}>
+                Your WhatsApp node is currently{' '}
+                <strong className="font-semibold" style={{ color: L.red }}>offline</strong>.{' '}
+                Connect your device to begin automating customer replies with{' '}
+                <a href="#" style={{ color: L.em, textDecoration: 'none', fontWeight: 500 }}>real-time AI response intelligence</a>.
+              </p>
+              <button
+                onClick={() => whatsappMutation.mutate()}
+                disabled={whatsappMutation.isPending}
+                className="w-full py-4 rounded-xl text-[15px] font-bold flex items-center justify-center gap-2.5 transition-all disabled:opacity-60"
+                style={{ background: L.em, color: '#fff', border: 'none', cursor: 'pointer', fontFamily: "'Syne', sans-serif" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#009e75'; (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)'; (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 24px ${L.emGlow}`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = L.em; (e.currentTarget as HTMLElement).style.transform = ''; (e.currentTarget as HTMLElement).style.boxShadow = ''; }}
+              >
+                {whatsappMutation.isPending
+                  ? <><RefreshCw className="w-5 h-5 animate-spin" /> Initializing Gateway...</>
+                  : <><span>📱</span> Connect WhatsApp Device</>}
+              </button>
+            </div>
+          )}
+
+          {status === 'connected' && (
+            <div className="rounded-xl p-5" style={{ background: L.emDim, border: `1px solid ${L.emGlow}` }}>
+              <h4 className="font-bold text-lg mb-2" style={{ color: L.em, fontFamily: "'Syne', sans-serif" }}>Node fully operational</h4>
+              <p className="text-sm leading-relaxed" style={{ color: L.textSec }}>
+                Your proxy node is actively listening. Messages are processed by GPT-4o and routed instantly.
+              </p>
+              <div className="mt-4 flex gap-3">
+                {[{ label: 'Response Mode', val: 'Autonomous AI' }, { label: 'Uptime', val: '99.9%' }].map((item) => (
+                  <div key={item.label} className="flex-1 p-3 rounded-lg" style={{ background: L.surface, border: `1px solid ${L.border}` }}>
+                    <div className="text-[10px] uppercase tracking-wide font-semibold mb-1" style={{ color: L.textMuted }}>{item.label}</div>
+                    <div className="text-sm font-bold" style={{ color: L.em }}>{item.val}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {status === 'connecting' && (
+            <div className="p-7 rounded-xl flex flex-col items-center text-center" style={{ background: '#d9770608', border: '1px solid #d9770625' }}>
+              <div className="w-12 h-12 rounded-full border-2 mb-4 animate-spin"
+                style={{ borderColor: '#d9770625', borderTopColor: L.amber }} />
+              <h4 className="font-bold text-lg mb-2" style={{ fontFamily: "'Syne', sans-serif", color: L.amber }}>Establishing Connection</h4>
+              <p className="text-sm" style={{ color: L.textSec }}>Attempting to establish a stable websocket handshake with WhatsApp servers.</p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* QR Code Modal for Whatsapp */}
-      {showQR && whatsappMutation.data?.data?.qr && status !== 'connected' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200">
-            <div className="p-6 text-center">
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Scan to Link Device</h3>
-              <p className="text-sm text-gray-500 mb-6">Open WhatsApp on your phone &gt; Linked Devices &gt; Link a Device. Point your camera at this QR code.</p>
-              <div className="bg-gray-50 p-4 rounded-xl inline-block border border-gray-100">
-                <img src={whatsappMutation.data.data.qr} alt="WhatsApp QR Code" className="w-56 h-56 mx-auto mix-blend-multiply" />
+      {/* Bottom Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2 animate-in fade-in slide-in-from-bottom-3 duration-500 delay-300">
+        <div className="rounded-2xl p-5" style={{ background: L.surface, border: `1px solid ${L.border}`, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+          <div className="text-[13px] font-bold mb-4" style={{ fontFamily: "'Syne', sans-serif" }}>⚡ Quick Actions</div>
+          <div className="flex flex-col gap-1">
+            {quickActions.map((a, i) => (
+              <Link key={i} href={a.href}
+                className="flex items-center gap-3 p-3 rounded-xl transition-all"
+                style={{ border: '1px solid transparent', textDecoration: 'none' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = L.surface2; (e.currentTarget as HTMLElement).style.borderColor = L.border; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = ''; (e.currentTarget as HTMLElement).style.borderColor = 'transparent'; }}
+              >
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                  style={{ background: a.bg, color: a.color }}>{a.icon}</div>
+                <div className="flex-1">
+                  <div className="text-[13.5px] font-medium" style={{ color: L.textPrimary }}>{a.name}</div>
+                  <div className="text-[11px] mt-0.5" style={{ color: L.textMuted }}>{a.desc}</div>
+                </div>
+                <ChevronRight className="w-4 h-4" style={{ color: L.textMuted }} />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl p-6 relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #f0fdf9 0%, #e6faf3 100%)', border: `1px solid ${L.emGlow}`, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
+          <div className="pointer-events-none absolute -top-8 -right-8"
+            style={{ width: 110, height: 110, background: `radial-gradient(circle, ${L.emGlow} 0%, transparent 70%)` }} />
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold mb-3"
+            style={{ background: L.emDim, border: `1px solid ${L.emGlow}`, color: L.em }}>
+            ✦ Pro Tip
+          </div>
+          <h3 className="text-[17px] font-bold mb-2" style={{ fontFamily: "'Syne', sans-serif", color: L.textPrimary, letterSpacing: '-0.3px' }}>
+            Boost your AI accuracy instantly
+          </h3>
+          <p className="text-[13px] leading-relaxed mb-5" style={{ color: L.textSec }}>
+            Upload your business PDFs, FAQs, and product documents to the Knowledge Base. Our AI uses this context to deliver precise, on-brand responses.
+          </p>
+          <Link href="/dashboard/knowledge"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all"
+            style={{ color: L.em, border: `1px solid ${L.emGlow}`, background: L.emDim, textDecoration: 'none' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = L.em; (e.currentTarget as HTMLElement).style.color = '#fff'; (e.currentTarget as HTMLElement).style.borderColor = L.em; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = L.emDim; (e.currentTarget as HTMLElement).style.color = L.em; (e.currentTarget as HTMLElement).style.borderColor = L.emGlow; }}
+          >
+            Go to Knowledge Base →
+          </Link>
+        </div>
+      </div>
+
+      {/* QR Modal */}
+      {showQR && whatsappMutation.data?.data?.qr && status === 'disconnected' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-300"
+          style={{ background: 'rgba(13,31,24,0.4)', backdropFilter: 'blur(12px)' }}>
+          <div className="rounded-3xl overflow-hidden max-w-sm w-full animate-in zoom-in-95 duration-300"
+            style={{ background: L.surface, border: `1px solid ${L.border}`, boxShadow: '0 32px 80px rgba(0,0,0,0.15)' }}>
+            <div className="h-1" style={{ background: `linear-gradient(90deg, ${L.em}, #00c896)` }} />
+            <div className="p-10 text-center">
+              <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: "'Syne', sans-serif" }}>Scan to Link</h3>
+              <p className="text-sm mb-8" style={{ color: L.textSec }}>
+                WhatsApp &gt; <span style={{ color: L.em }}>Linked Devices</span> &gt; <span style={{ color: L.em }}>Link a Device</span>
+              </p>
+              <div className="p-4 rounded-2xl inline-block mb-8" style={{ background: L.surface2, border: `1px solid ${L.border}` }}>
+                <img src={whatsappMutation.data.data.qr} alt="QR Code" className="w-56 h-56 mx-auto" />
               </div>
-              <button onClick={() => setShowQR(false)} className="mt-6 w-full py-2.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium rounded-lg transition-colors">
-                Cancel
+              <button onClick={() => setShowQR(false)} className="w-full py-3 rounded-xl text-sm font-semibold"
+                style={{ background: L.surface2, border: `1px solid ${L.border}`, color: L.textSec, cursor: 'pointer' }}>
+                Close
               </button>
             </div>
           </div>
         </div>
       )}
+
+      <style>{`@keyframes shimmer { 0%,100%{opacity:0} 50%{opacity:1} }`}</style>
     </div>
   );
 }
