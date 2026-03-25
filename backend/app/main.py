@@ -90,7 +90,7 @@ async def startup_event():
     # LLM provider diagnostics
     print(f"🤖 LLM provider: {settings.LLM_PROVIDER}")
     print(f"🤖 Chat model: {settings.CHAT_MODEL}")
-    print(f"Using local embeddings: all-MiniLM-L6-v2 (384 dimensions)")
+    print(f"Using fastembed local embeddings (384 dimensions)")
     if settings.LLM_PROVIDER.lower() == "groq":
         print(f"🤖 Has Groq key: {bool(settings.GROQ_API_KEY)}")
         print(f"🤖 Groq base URL: {settings.GROQ_BASE_URL}")

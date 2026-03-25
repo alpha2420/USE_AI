@@ -16,6 +16,4 @@ email-validator
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
-sentence-transformers==2.7.0
-numpy
-scikit-learn
+fastembed==0.3.6
