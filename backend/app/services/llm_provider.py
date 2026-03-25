@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 async def generate_embedding(text: str) -> list[float]:
     """Generate an embedding using the embeddings API."""
-    from app.services.embeddings import generate_embedding as _api_embedding
+    from app.services.embeddings import generate_single_embedding as _api_embedding
     return await _api_embedding(text)
 
 

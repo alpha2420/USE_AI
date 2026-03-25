@@ -51,7 +51,7 @@ async def startup_event():
             await conn.execute(text("SELECT 1"))
             await conn.run_sync(Base.metadata.create_all)
 
-            # Safe migration: ensure embedding column is 1536 dims
+            # Safe migration: ensure embedding column is 384 dims
             try:
                 result = await conn.execute(text(
                     "SELECT atttypmod FROM pg_attribute "
@@ -59,15 +59,15 @@ async def startup_event():
                     "AND attname = 'embedding'"
                 ))
                 row = result.first()
-                if row and row[0] != 1536:
-                    print(f"⚙️ Migrating embedding column from {row[0]} to 1536 dimensions...")
+                if row and row[0] != 384:
+                    print(f"⚙️ Migrating embedding column from {row[0]} to 384 dimensions...")
                     await conn.execute(text(
                         "DELETE FROM knowledge_chunks"
                     ))
                     await conn.execute(text(
-                        "ALTER TABLE knowledge_chunks ALTER COLUMN embedding TYPE vector(1536)"
+                        "ALTER TABLE knowledge_chunks ALTER COLUMN embedding TYPE vector(384)"
                     ))
-                    print("✅ Embedding column migrated to 1536 dimensions")
+                    print("✅ Embedding column migrated to 384 dimensions")
             except Exception as vec_err:
                 print(f"⚠️ Vector migration check skipped: {vec_err}")
 
@@ -90,7 +90,7 @@ async def startup_event():
     # LLM provider diagnostics
     print(f"🤖 LLM provider: {settings.LLM_PROVIDER}")
     print(f"🤖 Chat model: {settings.CHAT_MODEL}")
-    print(f"🤖 Embedding model: {settings.EMBEDDING_MODEL}")
+    print(f"Using local embeddings: all-MiniLM-L6-v2 (384 dimensions)")
     if settings.LLM_PROVIDER.lower() == "groq":
         print(f"🤖 Has Groq key: {bool(settings.GROQ_API_KEY)}")
         print(f"🤖 Groq base URL: {settings.GROQ_BASE_URL}")

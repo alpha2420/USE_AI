@@ -3,7 +3,7 @@ uvicorn
 pydantic
 pydantic-settings
 sqlalchemy
-asyncpg==0.29.0
+asyncpg
 alembic
 python-dotenv
 beautifulsoup4
@@ -16,3 +16,6 @@ email-validator
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
+sentence-transformers==2.7.0
+numpy
+scikit-learn

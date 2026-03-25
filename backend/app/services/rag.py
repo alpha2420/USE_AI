@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text
 from app.models.user import KnowledgeChunk
 from app.utils.chunker import chunk_text
-from app.services.embeddings import generate_embeddings_batch, generate_embedding
+from app.services.embeddings import generate_embeddings_batch, generate_single_embedding
 from app.services.llm_provider import generate_completion
 import logging
 
@@ -39,7 +39,7 @@ async def process_text(text_content: str, org_id: str, db: AsyncSession):
 
 async def generate_reply(question: str, org_id: str, db: AsyncSession) -> str:
     # Convert question to embedding
-    question_embedding = await generate_embedding(question)
+    question_embedding = await generate_single_embedding(question)
     
     # Search vector db
     # We use pgvector's <=> operator to calculate cosine distance

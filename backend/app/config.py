@@ -25,7 +25,8 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     GROQ_BASE_URL: str = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1")
     CHAT_MODEL: str = os.getenv("CHAT_MODEL", "llama-3.1-8b-instant")
-    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
+    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
+    EMBEDDING_DIMENSION: int = 384
 
     # Legacy keys (kept for backward compatibility)
     GROK_API_KEY: str = os.getenv("GROK_API_KEY", "")
